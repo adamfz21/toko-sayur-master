@@ -10,6 +10,7 @@ class Orders extends CI_Controller
         verify_session('admin');
 
         $this->load->model(array(
+            'product_model' => 'product',
             'order_model' => 'order'
         ));
     }
@@ -90,6 +91,22 @@ class Orders extends CI_Controller
     {
         $status = $this->input->post('status');
         $order = $this->input->post('order');
+
+		$dataOrder = $this->order->order_data($order);
+		$dataProductOrder = $this->order->order_items($order);
+		foreach ($dataProductOrder as $key => $value) {
+			$stock = $value->stock - $value->order_qty;
+			$dataProductUpdate [] = [
+				'id' => $value->product_id,
+				'stock' => $stock,
+			];
+		}
+		if($dataOrder->payment_method == 1 && $status == 4) {
+			$this->product->update_stock($dataProductUpdate);
+		}
+		elseif($dataOrder->payment_method != 1 && $status == 3) {
+			$this->product->update_stock($dataProductUpdate);
+		}
 
         $this->order->set_status($status, $order);
         $this->session->set_flashdata('order_flash', 'Status berhasil diperbarui');

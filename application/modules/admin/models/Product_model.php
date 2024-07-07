@@ -145,4 +145,9 @@ class Product_model extends CI_Model {
     {
         return $this->db->order_by('id', 'DESC')->limit(5)->get('product_category')->result();
     }
+
+	// Multiple Update Stock Product
+	public function update_stock($data) {
+		return $this->db->update_batch('products', $data, 'id');
+	}
 }
