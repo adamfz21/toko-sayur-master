@@ -65,26 +65,39 @@ defined('BASEPATH') or exit('No direct script access allowed');
               <div class="row">
                 <div class="col-md-10">
                   <div class="form-group">
+
                     <?php if ($data->payment_method == 1) : ?>
-                      <select class="form-control" id="status" name="status">
-                        <option value="2" <?php echo ($data->order_status == 2) ? ' selected' : ''; ?>>Dalam proses</option>
-                        <option value="3" <?php echo ($data->order_status == 3) ? ' selected' : ''; ?>>Dalam pengiriman</option>
-                        <option value="4" <?php echo ($data->order_status == 4) ? ' selected' : ''; ?>>Selesai</option>
-                        <option value="5" <?php echo ($data->order_status == 5) ? ' selected' : ''; ?>>Batalkan</option>
-                      </select>
+											<?php if (!in_array($data->order_status, [4,5])) : ?>
+												<select class="form-control" id="status" name="status">
+													<option value="2" <?php echo ($data->order_status == 2) ? ' selected' : ''; ?>>Dalam proses</option>
+													<option value="3" <?php echo ($data->order_status == 3) ? ' selected' : ''; ?>>Dalam pengiriman</option>
+													<option value="4" <?php echo ($data->order_status == 4) ? ' selected' : ''; ?>>Selesai</option>
+													<option value="5" <?php echo ($data->order_status == 5) ? ' selected' : ''; ?>>Batalkan</option>
+												</select>
+											<?php endif; ?>
                     <?php else : ?>
-                      <select class="form-control" id="status" name="status">
-                        <option value="1" <?php echo ($data->order_status == 1) ? ' selected' : ''; ?>>Dalam proses</option>
-                        <option value="2" <?php echo ($data->order_status == 2) ? ' selected' : ''; ?>>Dalam pengiriman</option>
-                        <option value="3" <?php echo ($data->order_status == 3) ? ' selected' : ''; ?>>Selesai</option>
-                        <option value="4" <?php echo ($data->order_status == 4) ? ' selected' : ''; ?>>Batalkan</option>
-                      </select>
+											<?php if (!in_array($data->order_status, [4,3])) : ?>
+												<select class="form-control" id="status" name="status">
+													<option value="1" <?php echo ($data->order_status == 1) ? ' selected' : ''; ?>>Dalam proses</option>
+													<option value="2" <?php echo ($data->order_status == 2) ? ' selected' : ''; ?>>Dalam pengiriman</option>
+													<option value="3" <?php echo ($data->order_status == 3) ? ' selected' : ''; ?>>Selesai</option>
+													<option value="4" <?php echo ($data->order_status == 4) ? ' selected' : ''; ?>>Batalkan</option>
+												</select>
+											<?php endif; ?>
                     <?php endif; ?>
                   </div>
                 </div>
                 <div class="col-md-2">
                   <div class="text-right">
-                    <input type="submit" value="OK" class="btn btn-md btn-primary">
+										<?php if ($data->payment_method == 1) : ?>
+											<?php if (!in_array($data->order_status, [4, 5])) : ?>
+                    		<input type="submit" value="OK" class="btn btn-md btn-primary">
+											<?php endif; ?>
+										<?php else : ?>
+											<?php if (!in_array($data->order_status, [3, 4])) : ?>
+												<input type="submit" value="OK" class="btn btn-md btn-primary">
+											<?php endif; ?>
+										<?php endif; ?>
                   </div>
                 </div>
               </div>
@@ -235,17 +248,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <input type="hidden" name="id" value="<?php echo $data->payment_id; ?>">
                 <input type="hidden" name="order" value="<?php echo $data->id; ?>">
                 <div class="col-md-9">
+									<?php if ($data->payment_status == 1) : ?>
                   <select class="form-control" name="action">
-                    <?php if ($data->payment_status == 1) : ?>
                       <option value="1">Konfirmasi Pembayaran</option>
                       <option value="2">Pembayaran Tidak Ada</option>
-                    <?php else : ?>
-                      <option value="4" readonly>Tidak ada pilihan</option>
+										</select>
                     <?php endif; ?>
-                  </select>
                 </div>
                 <div class="col-md-3 text-right">
+									<?php if ($data->payment_status == 1) : ?>
                   <input type="submit" class="btn btn-primary" value="OK">
+									<?php endif; ?>
                 </div>
               </div>
             </form>
